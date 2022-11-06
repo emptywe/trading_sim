@@ -1,0 +1,6 @@
+port: "8080"
+
+db:
+  url: "postgres://vyacheslav:1234@localhost:5432/traiding_sim?sslmode=disable"
+
+currencies: "btcusdt,ethusdt,bnbusdt,solusdt,adausdt,xrpusdt,dotusdt,dogeusdt,shibusdt,lunausdt,avaxusdt,ltcusdt,linkusdt,ftmusdt,uniusdt,bchusdt,hbarusdt,algousdt,maticusdt,vetusdt,xlmusdt,trxusdt,axsusdt,icpusdt,filusdt,atomusdt,etcusdt,thetausdt,nearusdt,fttusdt"

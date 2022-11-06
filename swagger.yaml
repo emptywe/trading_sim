@@ -1,0 +1,335 @@
+basePath: /sim
+consumes:
+- app/json
+definitions:
+  BalanceResponse:
+    properties:
+      balance:
+        type: string
+        x-go-name: Balance
+      baskets:
+        items:
+          $ref: '#/definitions/CurrencyOutput'
+        type: array
+        x-go-name: Baskets
+    type: object
+    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+  CurrencyOutput:
+    properties:
+      Name:
+        type: string
+      Value:
+        format: double
+        type: number
+    type: object
+    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+  ErrorResponse:
+    properties:
+      message:
+        type: string
+        x-go-name: Message
+    type: object
+    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+  SignInRequest:
+    properties:
+      password:
+        type: string
+        x-go-name: Password
+      user_name:
+        type: string
+        x-go-name: UserName
+    type: object
+    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+  SignInResponse:
+    properties:
+      id:
+        format: int64
+        type: integer
+        x-go-name: ID
+      session:
+        type: string
+        x-go-name: Session
+      token:
+        type: string
+        x-go-name: Token
+    type: object
+    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+  SignUpRequest:
+    properties:
+      email:
+        type: string
+        x-go-name: Email
+      password:
+        type: string
+        x-go-name: Password
+      user_name:
+        type: string
+        x-go-name: UserName
+    type: object
+    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+  SignUpResponse:
+    properties:
+      id:
+        format: int64
+        type: integer
+        x-go-name: ID
+    type: object
+    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+  TUser:
+    properties:
+      Balance:
+        format: double
+        type: number
+      UserName:
+        type: string
+    type: object
+    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+  Transaction:
+    properties:
+      c1_name:
+        type: string
+        x-go-name: C1Name
+      c2_name:
+        type: string
+        x-go-name: C2Name
+      dvalue:
+        format: double
+        type: number
+        x-go-name: Dvalue
+    type: object
+    x-go-package: gitlab.com/Muhmr/traiding_sim/pkg/router
+host: localhost
+info:
+  contact:
+    email: WWRadkov@gmail.com
+    name: Vyacheslav
+    url: https://gitlab.com/Muhmr
+  description: |-
+    the purpose of this application is to provide an application
+    that is using plain go code to define an API
+
+    This should demonstrate all the possible comment annotations
+    that are available to turn go code into a fully compliant swagger 2.0 spec
+  license:
+    name: None
+  termsOfService: there are no TOS at this moment, use at your own risk we take no
+    responsibility
+  title: Trading Simulator API.
+  version: 0.1.0
+paths:
+  /auth/logout:
+    post:
+      operationId: idOflogOutEndpoint
+      parameters:
+      - description: Enter username and password to sign in user.
+        in: body
+        name: Body
+        schema:
+          type: object
+      responses:
+        "200":
+          $ref: '#/responses/logOutResponse'
+        "401":
+          $ref: '#/responses/logOutErrResponse'
+      summary: logOut logouts user.
+      tags:
+      - foobar-tag
+  /auth/sign-in:
+    post:
+      operationId: idOfsignInEndpoint
+      parameters:
+      - description: Enter username and password to sign in user.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/SignInRequest'
+      responses:
+        "200":
+          $ref: '#/responses/signInResponse'
+        "401":
+          $ref: '#/responses/signInErrResponse'
+      summary: signIn singing in user.
+      tags:
+      - foobar-tag
+  /auth/sign-up:
+    post:
+      operationId: idOfsignUpEndpoint
+      parameters:
+      - description: Enter email, username and password to create user.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/SignUpRequest'
+      responses:
+        "200":
+          $ref: '#/responses/signUpResponse'
+        "422":
+          $ref: '#/responses/signUpErrResponse'
+      summary: signUp creates user.
+      tags:
+      - foobar-tag
+  /basket/balance:
+    get:
+      operationId: idOfbalanceEndpoint
+      parameters:
+      - description: Just reach endpoint to get info.
+        in: body
+        name: Body
+        schema:
+          type: object
+      responses:
+        "200":
+          $ref: '#/responses/balanceResponse'
+        "403":
+          $ref: '#/responses/balanceErrResponse'
+      summary: balance show users currencies and it's USD amount.
+      tags:
+      - foobar-tag
+  /basket/prices:
+    get:
+      operationId: idOfpricesEndpoint
+      parameters:
+      - description: Just reach endpoint to get info.
+        in: body
+        name: Body
+        schema:
+          type: object
+      responses:
+        "200":
+          $ref: '#/responses/pricesResponse'
+        "403":
+          $ref: '#/responses/pricesErrResponse'
+      summary: prices show all available currencies.
+      tags:
+      - foobar-tag
+  /basket/swap:
+    post:
+      description: swap exchanges currency 1 to currency 2
+      operationId: idOfswapEndpoint
+      parameters:
+      - description: Gives back id of basket with currency
+        in: body
+        name: Body
+        schema:
+          type: object
+      responses:
+        "200":
+          $ref: '#/responses/swapResponse'
+        "403":
+          $ref: '#/responses/swapErrResponse'
+        "412":
+          $ref: '#/responses/swapErrNewResponse'
+      tags:
+      - foobar-tag
+  /basket/top:
+    get:
+      description: topUsers show top 10 users
+      operationId: idOftopUsersEndpoint
+      parameters:
+      - description: Just reach endpoint to get info.
+        in: body
+        name: Body
+        schema:
+          type: object
+      responses:
+        "200":
+          $ref: '#/responses/topUsersResponse'
+        "403":
+          $ref: '#/responses/topUsersErrResponse'
+      tags:
+      - foobar-tag
+produces:
+- app/json
+responses:
+  balanceErrResponse:
+    description: If user doesn't sign in return status 403
+    schema:
+      type: object
+  balanceResponse:
+    description: If everything is ok give back slice of currencies struct and sum
+      of all currencies in USD
+    schema:
+      $ref: '#/definitions/BalanceResponse'
+  logOutErrResponse:
+    description: If user doesn't sign in return status 401
+    schema:
+      type: object
+  logOutResponse:
+    description: If everything is ok logging out user and delete session
+    schema:
+      type: object
+  pricesErrResponse:
+    description: If user doesn't sign in return status 403
+    schema:
+      type: object
+  pricesResponse:
+    description: If everything is ok gives back slice of currencies struct
+    schema:
+      items:
+        $ref: '#/definitions/CurrencyOutput'
+      type: array
+  signInErrResponse:
+    description: If user doesn't exist return an error
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  signInResponse:
+    description: If everything is ok signing in new user give back his id and create
+      session with cookie, giving back session id and JWT in response.
+    schema:
+      $ref: '#/definitions/SignInResponse'
+  signUpErrResponse:
+    description: If user already exist return an error
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  signUpResponse:
+    description: If everything is ok creates new user and give back his id.
+    schema:
+      $ref: '#/definitions/SignUpResponse'
+  swapErrNewResponse:
+    description: If user doesn't have enough currency or currency doesn't exist return
+      status 412
+    schema:
+      $ref: '#/definitions/ErrorResponse'
+  swapErrResponse:
+    description: If user doesn't sign in return status 403
+    schema:
+      type: object
+  swapResponse:
+    description: ""
+    schema:
+      $ref: '#/definitions/Transaction'
+  topUsersErrResponse:
+    description: If user doesn't sign in return status 403
+    schema:
+      type: object
+  topUsersResponse:
+    description: If everything is ok give back top 10 users
+    schema:
+      items:
+        $ref: '#/definitions/TUser'
+      type: array
+schemes:
+- http
+security:
+- api_key: []
+securityDefinitions:
+  api_key:
+    in: header
+    name: KEY
+    type: apiKey
+  oauth2:
+    authorizationUrl: /oauth2/auth
+    flow: accessCode
+    in: header
+    scopes:
+      bar: foo
+    tokenUrl: /oauth2/token
+    type: oauth2
+swagger: "2.0"
+x-meta-array:
+- value1
+- value2
+x-meta-array-obj:
+- name: obj
+  value: field
+x-meta-value: value
