@@ -1,6 +1,6 @@
 // Package classification Trading Simulator API.
 //
-// the purpose of this app is to provide an app
+// the purpose of this parser is to provide an parser
 // that is using plain go code to define an API
 //
 // This should demonstrate all the possible comment annotations
@@ -18,10 +18,10 @@
 //	Contact: Vyacheslav<WWRadkov@gmail.com> https://gitlab.com/Muhmr
 //
 //	Consumes:
-//	- app/json
+//	- parser/json
 //
 //	Produces:
-//	- app/json
+//	- parser/json
 //
 //	Security:
 //	- api_key:
@@ -53,7 +53,7 @@
 package docs
 
 import (
-	"github.com/emptywe/trading_sim/internal/router"
+	"github.com/emptywe/trading_sim/internal/simulator/api/v1/router"
 	"github.com/emptywe/trading_sim/model"
 )
 

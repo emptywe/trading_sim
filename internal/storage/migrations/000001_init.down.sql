@@ -1,8 +1,0 @@
-DROP TABLE IF EXISTS basket;
-
-DROP TABLE IF EXISTS session;
-
-DROP TABLE IF EXISTS users;
-
-DROP TABLE IF EXISTS currencies;
-
