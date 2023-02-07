@@ -1,17 +1,17 @@
-package binance
+package binancews
 
 const (
-	wsUrl       = "wss://stream.parser.com:9443/ws"
+	wsUrl       = "wss://stream.binance.com:9443/ws"
 	subscribe   = "SUBSCRIBE"
 	unsubscribe = "UNSUBSCRIBE"
-	trade       = "@trade"
+	Trade       = "@trade"
 	tradeUpd    = 500
 )
 
 type connRequest struct {
-	method string   `json:"method"`
-	params []string `json:"params"`
-	id     uint     `json:"id"`
+	Method string   `json:"method"`
+	Params []string `json:"params"`
+	Id     uint     `json:"id"`
 }
 
 type DataPrice struct {

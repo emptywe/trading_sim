@@ -8,12 +8,12 @@ import (
 	"strings"
 )
 
-func initParserData() (*parser_repo.Repository, []string) {
+func initParserData(poolSize int) (*parser_repo.Repository, int, []string) {
 	db, err := postgres.NewPostgresDB(postgres.Config{
 		Url: viper.GetString("db.url"),
 	})
 	if err != nil {
 		zap.S().Fatal("failed to initialize db: " + err.Error())
 	}
-	return parser_repo.NewRepository(db), strings.Split(viper.GetString("currencies"), ",")
+	return parser_repo.NewRepository(db), 5, strings.Split(viper.GetString("currencies"), ",")
 }

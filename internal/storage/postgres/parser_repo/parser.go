@@ -2,7 +2,6 @@ package parser_repo
 
 import (
 	"github.com/jmoiron/sqlx"
-	"github.com/sirupsen/logrus"
 	"strings"
 )
 
@@ -26,7 +25,6 @@ func (r ParserConnPostgres) CreateNewCurrency(name string) error {
 	_, err := r.db.Exec("INSERT into currencies (name,value) values ($1, $2)", name, 1)
 	if err != nil {
 		if !strings.Contains(err.Error(), "duplicate key value violates unique constraint ") {
-			logrus.Printf("can't create currency table")
 			return err
 		}
 	}
