@@ -18,6 +18,6 @@ func main() {
 	zap.S().Debugw("Parser logger initialised")
 	zap.S().Infof("Parser start")
 	parser.NewParser(initParserData(5)).InitParser()
-	wait.WaitInterrupt()
+	wait.Interrupt()
 	zap.S().Infof("Parser shutdown")
 }

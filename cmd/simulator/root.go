@@ -28,7 +28,7 @@ func Execute() {
 	go srv.StartNewServer(initHandlers().InitRoutes(), viper.GetInt("port"))
 	srv.WaitServer()
 	logger.InitLogger(logger.EnableTrace)
-	wait.WaitInterrupt()
+	wait.Interrupt()
 	logger.InitLogger(logger.DisableTrace)
 	srv.StopServer()
 }

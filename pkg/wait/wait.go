@@ -6,7 +6,7 @@ import (
 	"syscall"
 )
 
-func WaitInterrupt() {
+func Interrupt() {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGTERM, syscall.SIGINT)
 	<-quit
