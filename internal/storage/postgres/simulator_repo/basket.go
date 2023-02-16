@@ -1,11 +1,13 @@
 package simulator_repo
 
 import (
+	"errors"
+	"fmt"
+
 	"github.com/jmoiron/sqlx"
-	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
-	"github.com/emptywe/trading_sim/model"
+	"github.com/emptywe/trading_sim/entity"
 )
 
 type BasketPostgres struct {
@@ -16,23 +18,23 @@ func NewBasketPostgres(db *sqlx.DB) *BasketPostgres {
 	return &BasketPostgres{db: db}
 }
 
-func (r BasketPostgres) GetCurrency(name string) (model.Currency, error) {
-	var currency model.Currency
+func (r BasketPostgres) GetCurrency(name string) (entity.Currency, error) {
+	var currency entity.Currency
 
 	row := r.db.QueryRow("SELECT * FROM currencies WHERE name=$1", name)
 	if err := row.Scan(&currency.Cid, &currency.Name, &currency.Value); err != nil {
-		return model.Currency{}, errors.New("no such currency")
+		return entity.Currency{}, errors.New("no such currency")
 	}
 	return currency, nil
 }
 
-func (r BasketPostgres) GetBasket(id int, c string) (model.Basket, error) {
+func (r BasketPostgres) GetBasket(id int, c string) (entity.Basket, error) {
 
-	var basket model.Basket
+	var basket entity.Basket
 
 	row := r.db.QueryRow("SELECT id, transactiontype, value, amount ,status FROM basket WHERE user_id=$1 AND currency=$2", id, c)
 	if err := row.Scan(&basket.Bid, &basket.TransactionType, &basket.Value, &basket.Amount, &basket.Status); err != nil {
-		return model.Basket{}, errors.New("asset doesn't exist")
+		return entity.Basket{}, errors.New("asset doesn't exist")
 	}
 	basket.Currency = c
 	return basket, nil
@@ -87,8 +89,8 @@ func (r BasketPostgres) CreateBasket(id int, c1, c2 string, v float64) (int, err
 
 }
 
-func (r BasketPostgres) GetAllCurrenciesUSD() ([]model.CurrencyOutput, error) {
-	var data []model.CurrencyOutput
+func (r BasketPostgres) GetAllCurrenciesUSD() ([]entity.CurrencyOutput, error) {
+	var data []entity.CurrencyOutput
 
 	rows, err := r.db.Query("SELECT name, value from currencies")
 	if err != nil {
@@ -97,7 +99,7 @@ func (r BasketPostgres) GetAllCurrenciesUSD() ([]model.CurrencyOutput, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var dat model.CurrencyOutput
+		var dat entity.CurrencyOutput
 		if err := rows.Scan(&dat.Name, &dat.Value); err != nil {
 			return data, err
 		}
@@ -110,8 +112,8 @@ func (r BasketPostgres) GetAllCurrenciesUSD() ([]model.CurrencyOutput, error) {
 	return data, nil
 }
 
-func (r BasketPostgres) GetAllBaskets(id int) ([]model.BasketOutput, error) {
-	var data []model.BasketOutput
+func (r BasketPostgres) GetAllBaskets(id int) ([]entity.BasketOutput, error) {
+	var data []entity.BasketOutput
 
 	rows, err := r.db.Query("SELECT  currency,value, amount FROM basket WHERE user_id=$1", id)
 	if err != nil {
@@ -120,7 +122,7 @@ func (r BasketPostgres) GetAllBaskets(id int) ([]model.BasketOutput, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var dat model.BasketOutput
+		var dat entity.BasketOutput
 		if err := rows.Scan(&dat.Currency, &dat.Value, &dat.USDAmount); err != nil {
 			return data, err
 		}
@@ -133,8 +135,8 @@ func (r BasketPostgres) GetAllBaskets(id int) ([]model.BasketOutput, error) {
 	return data, nil
 }
 
-func (r BasketPostgres) GetTopUsers() ([]model.TUser, error) {
-	var data []model.TUser
+func (r BasketPostgres) GetTopUsers() ([]entity.TUser, error) {
+	var data []entity.TUser
 
 	rows, err := r.db.Query("SELECT username, balance from users ORDER BY balance ASC LIMIT 10")
 	if err != nil {
@@ -143,7 +145,7 @@ func (r BasketPostgres) GetTopUsers() ([]model.TUser, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var dat model.TUser
+		var dat entity.TUser
 		if err := rows.Scan(&dat.UserName, &dat.Balance); err != nil {
 			return data, errors.New("can't find users")
 		}
@@ -165,16 +167,16 @@ func (r BasketPostgres) CreateStartingBasket(id int) (int, error) {
 		return 0, err
 	}
 
-	row := r.db.QueryRow("INSERT INTO basket (user_id, transactiontype, currency_id, currency, value, amount, status)  values ($1, $2, $3, $4, $5,$6, $7) RETURNING id", id, "buy", cu.Cid, cu.Name, 1000, 1000*cu.Value, "exist")
+	row := r.db.QueryRow("INSERT INTO basket (user_id, currency_id, currency, amount)  values ($1, $2, $3, $4) RETURNING id", id, cu.Cid, cu.Name, 1000)
 	err = row.Scan(&bId)
 	if err != nil {
-		return 0, errors.New("empty currency table")
+		return 0, fmt.Errorf("db: %v", err)
 	}
 	return bId, err
 }
 
-func (r BasketPostgres) GetAllUsers() ([]model.User, error) {
-	var data []model.User
+func (r BasketPostgres) GetAllUsers() ([]entity.User, error) {
+	var data []entity.User
 
 	rows, err := r.db.Query("SELECT id, username, balance from users")
 	if err != nil {
@@ -183,7 +185,7 @@ func (r BasketPostgres) GetAllUsers() ([]model.User, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var dat model.User
+		var dat entity.User
 		if err := rows.Scan(&dat.Uid, &dat.UserName, &dat.Balance); err != nil {
 			return data, errors.New("internal scan users problem")
 		}
@@ -224,7 +226,7 @@ func (r BasketPostgres) UpdateBalance() (string, error) {
 }
 
 func (r BasketPostgres) UpdateBasket(name string) error {
-	var basket []model.Basket
+	var basket []entity.Basket
 
 	rows, err := r.db.Query("SELECT id, value from basket where currency=$1", name)
 	if err != nil {
@@ -233,7 +235,7 @@ func (r BasketPostgres) UpdateBasket(name string) error {
 	}
 
 	for rows.Next() {
-		var bask model.Basket
+		var bask entity.Basket
 		if err := rows.Scan(&bask.Bid, &bask.Value); err != nil {
 			return errors.New("internal scan basket problem")
 		}

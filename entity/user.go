@@ -1,11 +1,14 @@
-package model
+package entity
 
-import "errors"
+import (
+	"errors"
+
+	"github.com/emptywe/trading_sim/pkg/session"
+)
 
 type User struct {
-	Uid       int     `json:"-" db:"id"`
+	Uid       int     `json:"id" db:"id"`
 	Email     string  `json:"email"`
-	Password  string  `json:"password"`
 	UserName  string  `json:"user_name,omitempty"`
 	FirstName string  `json:"firstName,omitempty" `
 	LastName  string  `json:"lastName,omitempty" `
@@ -34,9 +37,8 @@ type SignInRequest struct {
 }
 
 type SignInResponse struct {
-	ID      int    `json:"id"`
-	Session string `json:"session"`
-	Token   string `json:"token"`
+	User    `json:"user"`
+	Session *session.Session `json:"session_cache"`
 }
 
 type ErrorResponse struct {

@@ -1,11 +1,13 @@
 package parser
 
 import (
-	"github.com/emptywe/trading_sim/internal/storage/postgres/parser_repo"
-	"github.com/emptywe/trading_sim/pkg/binance/binancews"
-	"go.uber.org/zap"
 	"strconv"
 	"strings"
+
+	"go.uber.org/zap"
+
+	"github.com/emptywe/trading_sim/internal/storage/postgres/parser_repo"
+	"github.com/emptywe/trading_sim/pkg/binance/binancews"
 )
 
 type Parser struct {
@@ -16,6 +18,15 @@ type Parser struct {
 
 func NewParser(repo *parser_repo.Repository, poolSize int, currencyList []string) *Parser {
 	return &Parser{repo: repo, poolSize: poolSize, currencyList: currencyList}
+}
+
+func (a *Parser) parseBinanceData(Data chan binancews.DataPrice) {
+	for i := range Data {
+		price, _ := strconv.ParseFloat(i.Price, 64)
+		if err := a.repo.UpdateCurrency(strings.ToLower(i.Symbol), price); err != nil {
+			zap.S().Errorf("can't update currency: %v", err)
+		}
+	}
 }
 
 func (a *Parser) createWorker(list []string) {
@@ -37,15 +48,6 @@ func (a *Parser) currencyUpdater() {
 	}
 	if len(list) > 0 {
 		go a.createWorker(list)
-	}
-}
-
-func (a *Parser) parseBinanceData(Data chan binancews.DataPrice) {
-	for i := range Data {
-		price, _ := strconv.ParseFloat(i.Price, 64)
-		if err := a.repo.UpdateCurrency(strings.ToLower(i.Symbol), price); err != nil {
-			zap.S().Errorf("can't update currency: %v", err)
-		}
 	}
 }
 

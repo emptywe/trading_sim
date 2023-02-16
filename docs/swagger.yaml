@@ -13,7 +13,7 @@ definitions:
         type: array
         x-go-name: Baskets
     type: object
-    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+    x-go-package: gitlab.com/Muhmr/traiding_sim/entity
   CurrencyOutput:
     properties:
       Name:
@@ -22,14 +22,14 @@ definitions:
         format: double
         type: number
     type: object
-    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+    x-go-package: gitlab.com/Muhmr/traiding_sim/entity
   ErrorResponse:
     properties:
       message:
         type: string
         x-go-name: Message
     type: object
-    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+    x-go-package: gitlab.com/Muhmr/traiding_sim/entity
   SignInRequest:
     properties:
       password:
@@ -39,7 +39,7 @@ definitions:
         type: string
         x-go-name: UserName
     type: object
-    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+    x-go-package: gitlab.com/Muhmr/traiding_sim/entity
   SignInResponse:
     properties:
       id:
@@ -53,7 +53,7 @@ definitions:
         type: string
         x-go-name: Token
     type: object
-    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+    x-go-package: gitlab.com/Muhmr/traiding_sim/entity
   SignUpRequest:
     properties:
       email:
@@ -66,7 +66,7 @@ definitions:
         type: string
         x-go-name: UserName
     type: object
-    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+    x-go-package: gitlab.com/Muhmr/traiding_sim/entity
   SignUpResponse:
     properties:
       id:
@@ -74,7 +74,7 @@ definitions:
         type: integer
         x-go-name: ID
     type: object
-    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+    x-go-package: gitlab.com/Muhmr/traiding_sim/entity
   TUser:
     properties:
       Balance:
@@ -83,7 +83,7 @@ definitions:
       UserName:
         type: string
     type: object
-    x-go-package: gitlab.com/Muhmr/traiding_sim/model
+    x-go-package: gitlab.com/Muhmr/traiding_sim/entity
   Transaction:
     properties:
       c1_name:
@@ -255,7 +255,7 @@ responses:
     schema:
       type: object
   logOutResponse:
-    description: If everything is ok logging out user and delete session
+    description: If everything is ok logging out user and delete session_cache
     schema:
       type: object
   pricesErrResponse:
@@ -274,7 +274,7 @@ responses:
       $ref: '#/definitions/ErrorResponse'
   signInResponse:
     description: If everything is ok signing in new user give back his id and create
-      session with cookie, giving back session id and JWT in response.
+      session_cache with cookie, giving back session_cache id and JWT in response.
     schema:
       $ref: '#/definitions/SignInResponse'
   signUpErrResponse:

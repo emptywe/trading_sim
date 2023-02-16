@@ -5,7 +5,7 @@ const (
 	subscribe   = "SUBSCRIBE"
 	unsubscribe = "UNSUBSCRIBE"
 	Trade       = "@trade"
-	tradeUpd    = 500
+	tradeUpd    = 100
 )
 
 type connRequest struct {

@@ -1,8 +1,9 @@
 package parser_repo
 
 import (
-	"github.com/jmoiron/sqlx"
 	"strings"
+
+	"github.com/jmoiron/sqlx"
 )
 
 type ParserConnPostgres struct {

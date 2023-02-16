@@ -3,8 +3,9 @@ package router
 import (
 	"encoding/json"
 	"fmt"
-	"go.uber.org/zap"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 type Transaction struct {
@@ -42,7 +43,7 @@ func (h *Handler) swap(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//id, _, err := h.services.Authorization.ParseToken(co.Value)
-	id := 1 // TODO: add users session logic
+	id := 1 // TODO: add users session_cache logic
 
 	// TODO: move to anothre function
 	if input.C2Name == "usdt" {

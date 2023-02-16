@@ -15,7 +15,7 @@ type Config struct {
 	Url string
 }
 
-func NewPostgresDB(cfg Config) (*sqlx.DB, error) {
+func NewDB(cfg Config) (*sqlx.DB, error) {
 	db, err := sqlx.Connect("pgx", cfg.Url)
 	if err != nil {
 		return nil, err

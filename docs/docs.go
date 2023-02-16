@@ -53,8 +53,8 @@
 package docs
 
 import (
+	"github.com/emptywe/trading_sim/entity"
 	"github.com/emptywe/trading_sim/internal/simulator/api/v1/router"
-	"github.com/emptywe/trading_sim/model"
 )
 
 // swagger:route POST /auth/sign-up foobar-tag idOfsignUpEndpoint
@@ -67,21 +67,21 @@ import (
 // swagger:response signUpResponse
 type signUpResponseWrapper struct {
 	// in:body
-	Body model.SignUpResponse
+	Body entity.SignUpResponse
 }
 
 // If user already exist return an error
 // swagger:response signUpErrResponse
 type signUpNewResponseWrapper struct {
 	// in:body
-	Body model.ErrorResponse
+	Body entity.ErrorResponse
 }
 
 // swagger:parameters idOfsignUpEndpoint
 type signUpParamsWrapper struct {
 	// Enter email, username and password to create user.
 	// in:body
-	Body model.SignUpRequest
+	Body entity.SignUpRequest
 }
 
 // swagger:route POST /auth/sign-in foobar-tag idOfsignInEndpoint
@@ -90,25 +90,25 @@ type signUpParamsWrapper struct {
 //   200: signInResponse
 //   401: signInErrResponse
 
-// If everything is ok signing in new user give back his id and create session with cookie, giving back session id and JWT in response.
+// If everything is ok signing in new user give back his id and create session_cache with cookie, giving back session_cache id and JWT in response.
 // swagger:response signInResponse
 type signInResponseWrapper struct {
 	// in:body
-	Body model.SignInResponse
+	Body entity.SignInResponse
 }
 
 // If user doesn't exist return an error
 // swagger:response signInErrResponse
 type signInNewResponseWrapper struct {
 	// in:body
-	Body model.ErrorResponse
+	Body entity.ErrorResponse
 }
 
 // swagger:parameters idOfsignInEndpoint
 type signInParamsWrapper struct {
 	// Enter username and password to sign in user.
 	// in:body
-	Body model.SignInRequest
+	Body entity.SignInRequest
 }
 
 // swagger:route POST /auth/logout foobar-tag idOflogOutEndpoint
@@ -117,7 +117,7 @@ type signInParamsWrapper struct {
 //   200: logOutResponse
 //   401: logOutErrResponse
 
-// If everything is ok logging out user and delete session
+// If everything is ok logging out user and delete session_cache
 // swagger:response logOutResponse
 type logOutResponseWrapper struct {
 	// in:body
@@ -148,7 +148,7 @@ type logOutParamsWrapper struct {
 // swagger:response pricesResponse
 type pricesResponseWrapper struct {
 	// in:body
-	Body [2]model.CurrencyOutput
+	Body [2]entity.CurrencyOutput
 }
 
 // If user doesn't sign in return status 403
@@ -175,7 +175,7 @@ type pricesParamsWrapper struct {
 // swagger:response balanceResponse
 type balanceResponseWrapper struct {
 	// in:body
-	Body model.BalanceResponse
+	Body entity.BalanceResponse
 }
 
 // If user doesn't sign in return status 403
@@ -202,7 +202,7 @@ type balanceParamsWrapper struct {
 // swagger:response topUsersResponse
 type topUsersResponseWrapper struct {
 	// in:body
-	Body []model.TUser
+	Body []entity.TUser
 }
 
 // If user doesn't sign in return status 403
@@ -243,7 +243,7 @@ type swapNewResponseWrapper struct {
 // swagger:response swapErrNewResponse
 type swapNewNewResponseWrapper struct {
 	// in:body
-	Body model.ErrorResponse
+	Body entity.ErrorResponse
 }
 
 // swagger:parameters idOfswapEndpoint
