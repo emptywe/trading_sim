@@ -1,93 +1,49 @@
 package authentication
 
 import (
-	"errors"
+	"github.com/emptywe/trading_sim/entity"
 	"github.com/emptywe/trading_sim/internal/storage/postgres/simulator_repo"
-	"net/http"
-	"time"
-
-	"github.com/golang-jwt/jwt/v4"
-	"github.com/google/uuid"
+	"github.com/emptywe/trading_sim/internal/storage/redis/simulator_cache/session_cache"
+	"strings"
 )
 
-const (
-	tokenEXP = 5 * time.Minute
-	signTKey = "sNKL213%md#4411jHKjHuh7*@1"
-)
-
-type AuthService struct {
-	repo simulator_repo.Authorization
+type Service struct {
+	repo  simulator_repo.Authorization
+	cache *session_cache.Cache
 }
 
-func NewAuthService(repo simulator_repo.Authorization) *AuthService {
-	return &AuthService{repo: repo}
+func NewAuthService(repo simulator_repo.Authorization, cache *session_cache.Cache) *Service {
+	return &Service{repo: repo, cache: cache}
 }
 
-type tokenClaims struct {
-	jwt.RegisteredClaims
-	UserId int    `json:"user_id"`
-	Sid    string `json:"sid"`
+func (s *Service) CreateUser(request entity.SignUpRequest) (int, error) {
+	var err error
+	request.UserName = strings.ToLower(request.UserName)
+	request.Password, err = generatePasswordHash(request.Password)
+	if err != nil {
+		return 0, err
+	}
+	return s.repo.CreateUser(request)
 }
 
-func (s *AuthService) CreateUser(email, userName, password string) (int, error) {
+func (s *Service) ReadUser(request entity.SignInRequest) (entity.User, error) {
+	request.UserName = strings.ToLower(request.UserName)
+	if err := s.repo.ValidatePassword(request); err != nil {
+		return entity.User{}, err
+	}
+	return s.repo.ReadUser(request.UserName)
+}
+
+func (s *Service) UpdateUser(email, userName, password string) (int, error) {
 	var err error
 	password, err = generatePasswordHash(password)
 	if err != nil {
 		return 0, err
 	}
-	return s.repo.CreateUser(email, userName, password)
+	// TODO: add logic
+	return s.repo.CreateUser(entity.SignUpRequest{})
 }
 
-func (s *AuthService) GenerateToken(username, password string) (string, error) {
-	user, err := s.repo.GetUser(username, password)
-	if err != nil {
-		return "", err
-	}
-	sUUID := uuid.New().String()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
-		jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(tokenEXP)),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-		},
-		user.Uid,
-		sUUID,
-	})
-	return token.SignedString([]byte(signTKey))
-}
-
-func (s *AuthService) CreateSession(c *http.Cookie) (int, string, error) {
-	id, sid, err := parseToken(c.Value)
-	if err != nil {
-		return 0, "", errors.New("invalid session token ")
-	}
-	return s.repo.CreateSession(c, id, sid)
-
-}
-
-func (s *AuthService) ValidateSession(c *http.Cookie) (int, bool) {
-
-	id, sid, err := parseToken(c.Value)
-	if err != nil {
-		return 0, false
-	}
-
-	return s.repo.ValidateSession(c, id, sid)
-}
-
-func (s *AuthService) ExpireSession(c *http.Cookie) *http.Cookie {
-	id, sid, err := parseToken(c.Value)
-	if err != nil {
-		return nil
-	}
-
-	return s.repo.ExpireSession(c, id, sid)
-
-}
-
-func (s *AuthService) DropUser(id int) error {
-	return s.repo.DropUser(id)
-}
-
-func (s *AuthService) SessionGarbageCollector() error {
-	return s.repo.SessionGarbageCollector()
+func (s *Service) DeleteUser(id int) error {
+	return s.repo.DeleteUser(id)
 }

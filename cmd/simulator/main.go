@@ -15,5 +15,5 @@ func main() {
 	logger.InitLogger(logger.DisableTrace)
 	defer zap.S().Sync()
 	zap.S().Debugw("Simulator logger initialised")
-	Execute()
+	execute()
 }
