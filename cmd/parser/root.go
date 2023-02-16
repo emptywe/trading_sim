@@ -1,13 +1,15 @@
 package main
 
 import (
+	"strings"
+
+	"github.com/spf13/viper"
+	"go.uber.org/zap"
+
 	"github.com/emptywe/trading_sim/internal/parser"
 	"github.com/emptywe/trading_sim/internal/storage/postgres"
 	"github.com/emptywe/trading_sim/internal/storage/postgres/parser_repo"
 	"github.com/emptywe/trading_sim/pkg/wait"
-	"github.com/spf13/viper"
-	"go.uber.org/zap"
-	"strings"
 )
 
 func execute() {

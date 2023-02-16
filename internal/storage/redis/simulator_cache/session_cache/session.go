@@ -4,8 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/emptywe/trading_sim/pkg/session"
+
 	"github.com/go-redis/redis/v8"
+
+	"github.com/emptywe/trading_sim/pkg/session"
 )
 
 type SessionCache struct {

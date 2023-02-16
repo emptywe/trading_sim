@@ -3,10 +3,12 @@ package simulator_repo
 import (
 	"errors"
 	"fmt"
-	"github.com/emptywe/trading_sim/entity"
-	"github.com/jmoiron/sqlx"
 	"golang.org/x/crypto/bcrypt"
 	"time"
+
+	"github.com/jmoiron/sqlx"
+
+	"github.com/emptywe/trading_sim/entity"
 )
 
 type AuthPostgres struct {

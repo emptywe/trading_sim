@@ -3,8 +3,9 @@ package router
 import (
 	"encoding/json"
 	"fmt"
-	"go.uber.org/zap"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 func errorJSON(w http.ResponseWriter, err error, statusCode int) {

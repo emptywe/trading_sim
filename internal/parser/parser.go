@@ -1,11 +1,13 @@
 package parser
 
 import (
-	"github.com/emptywe/trading_sim/internal/storage/postgres/parser_repo"
-	"github.com/emptywe/trading_sim/pkg/binance/binancews"
-	"go.uber.org/zap"
 	"strconv"
 	"strings"
+
+	"go.uber.org/zap"
+
+	"github.com/emptywe/trading_sim/internal/storage/postgres/parser_repo"
+	"github.com/emptywe/trading_sim/pkg/binance/binancews"
 )
 
 type Parser struct {

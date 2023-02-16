@@ -1,7 +1,6 @@
 package main
 
 import (
-	"github.com/emptywe/trading_sim/internal/storage/redis/simulator_cache/session_cache"
 	"strings"
 
 	"github.com/go-redis/redis/v8"
@@ -15,6 +14,7 @@ import (
 	"github.com/emptywe/trading_sim/internal/storage/postgres"
 	"github.com/emptywe/trading_sim/internal/storage/postgres/simulator_repo"
 	myredis "github.com/emptywe/trading_sim/internal/storage/redis"
+	"github.com/emptywe/trading_sim/internal/storage/redis/simulator_cache/session_cache"
 	"github.com/emptywe/trading_sim/pkg/logger"
 	"github.com/emptywe/trading_sim/pkg/wait"
 )

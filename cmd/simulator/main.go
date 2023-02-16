@@ -1,10 +1,11 @@
 package main
 
 import (
+	"go.uber.org/zap"
+
 	_ "github.com/emptywe/trading_sim/docs"
 	"github.com/emptywe/trading_sim/pkg/config"
 	"github.com/emptywe/trading_sim/pkg/logger"
-	"go.uber.org/zap"
 )
 
 func init() {

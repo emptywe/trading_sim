@@ -1,10 +1,11 @@
 package authentication
 
 import (
+	"strings"
+
 	"github.com/emptywe/trading_sim/entity"
 	"github.com/emptywe/trading_sim/internal/storage/postgres/simulator_repo"
 	"github.com/emptywe/trading_sim/internal/storage/redis/simulator_cache/session_cache"
-	"strings"
 )
 
 type Service struct {

@@ -2,6 +2,7 @@ package entity
 
 import (
 	"errors"
+
 	"github.com/emptywe/trading_sim/pkg/session"
 )
 

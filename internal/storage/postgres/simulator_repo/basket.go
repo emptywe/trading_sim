@@ -1,9 +1,10 @@
 package simulator_repo
 
 import (
+	"errors"
 	"fmt"
+
 	"github.com/jmoiron/sqlx"
-	"github.com/pkg/errors"
 	"go.uber.org/zap"
 
 	"github.com/emptywe/trading_sim/entity"

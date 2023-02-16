@@ -2,8 +2,9 @@ package authentication
 
 import (
 	"fmt"
-	"go.uber.org/zap"
 	"golang.org/x/crypto/bcrypt"
+
+	"go.uber.org/zap"
 )
 
 func generatePasswordHash(password string) (string, error) {

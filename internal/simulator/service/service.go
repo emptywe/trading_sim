@@ -1,14 +1,14 @@
 package service
 
 import (
+	"net/http"
+
+	"github.com/emptywe/trading_sim/entity"
 	"github.com/emptywe/trading_sim/internal/simulator/service/authentication"
 	"github.com/emptywe/trading_sim/internal/simulator/service/basket"
 	"github.com/emptywe/trading_sim/internal/storage/postgres/simulator_repo"
 	"github.com/emptywe/trading_sim/internal/storage/redis/simulator_cache/session_cache"
 	"github.com/emptywe/trading_sim/pkg/session"
-	"net/http"
-
-	"github.com/emptywe/trading_sim/entity"
 )
 
 type Authorization interface {

@@ -2,9 +2,10 @@ package authentication
 
 import (
 	"context"
+	"net/http"
+
 	"github.com/emptywe/trading_sim/entity"
 	"github.com/emptywe/trading_sim/pkg/session"
-	"net/http"
 )
 
 func (s *Service) CreateSession(user *entity.User) (*session.Session, error) {

@@ -1,8 +1,9 @@
 package session
 
 import (
-	"github.com/golang-jwt/jwt/v4"
 	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 )
 
 const (

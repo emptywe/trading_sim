@@ -1,11 +1,13 @@
 package router
 
 import (
-	"github.com/emptywe/trading_sim/internal/simulator/service"
+	"net/http"
+
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
-	"net/http"
+
+	"github.com/emptywe/trading_sim/internal/simulator/service"
 )
 
 type Handler struct {

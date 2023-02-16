@@ -3,8 +3,9 @@ package router
 import (
 	"encoding/json"
 	"fmt"
-	"go.uber.org/zap"
 	"net/http"
+
+	"go.uber.org/zap"
 
 	"github.com/emptywe/trading_sim/entity"
 )
