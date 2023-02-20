@@ -8,15 +8,13 @@ import (
 
 const (
 	tokenEXP      = time.Minute * 15
-	ExpireSession = time.Hour * 120
+	ExpireSession = time.Hour * 24
 	signTKey      = "sNKL213%md#4411jHKjHuh7*@1"
 )
 
 type Session struct {
-	Token       string `json:"token"`
-	RToken      string `json:"refresh_token"`
-	Valid       bool
-	Established time.Time
+	Token  string `json:"token"`
+	RToken string `json:"refresh_token"`
 }
 
 type TokenClaims struct {

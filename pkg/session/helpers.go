@@ -31,7 +31,6 @@ func ParseToken(claim jwt.Claims, token string) (interface{}, error) {
 	})
 	if err != nil {
 		if !errors.Is(err, jwt.ErrTokenExpired) {
-			fmt.Printf("%v//////////dsada//\n", err)
 			return nil, err
 		}
 	}

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"go.uber.org/zap"
 
@@ -76,12 +77,10 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := entity.SignInResponse{
+	if err = json.NewEncoder(w).Encode(entity.SignInResponse{
 		User:    user,
 		Session: session,
-	}
-
-	if err = json.NewEncoder(w).Encode(response); err != nil {
+	}); err != nil {
 		zap.S().Error("can't send signIn success response")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -90,26 +89,28 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) logOut(w http.ResponseWriter, r *http.Request) {
 
-	//co, err := c.Request.Cookie("USession")
-	//if err != nil {
-	//	c.AbortWithStatus(http.StatusUnauthorized)
-	//	return
-	//}
-	//
-	//_, ok := h.services.Authorization.ValidateSession(co)
-	//if !ok {
-	//	c.AbortWithStatus(http.StatusUnauthorized)
-	//	return
-	//}
-	//
-	//_ = h.services.Authorization.ExpireSession(co)
-	//co.Path = "/sim"
-	//co.MaxAge = -1
-	//
-	//http.SetCookie(c.Writer, co)
-
+	authHead := r.Header.Get("Authorization")
+	authSlice := strings.Split(authHead, " ")
+	token := authSlice[1]
+	err := h.services.DeleteSession(token)
+	if err != nil {
+		zap.S().Errorf("can't delete session: %v", err)
+		errorJSON(w, err, http.StatusBadRequest)
+		return
+	}
+	if err = json.NewEncoder(w).Encode(map[string]interface{}{
+		"message": "successfully logged out",
+	}); err != nil {
+		zap.S().Error("can't send signUp success response")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 }
 
 func (h *Handler) updateUser(w http.ResponseWriter, r *http.Request) {
+
+}
+
+func (h *Handler) deleteUser(w http.ResponseWriter, r *http.Request) {
 
 }
