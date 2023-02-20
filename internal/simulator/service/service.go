@@ -1,8 +1,6 @@
 package service
 
 import (
-	"net/http"
-
 	"github.com/emptywe/trading_sim/entity"
 	"github.com/emptywe/trading_sim/internal/simulator/service/authentication"
 	"github.com/emptywe/trading_sim/internal/simulator/service/basket"
@@ -18,8 +16,8 @@ type Authorization interface {
 	DeleteUser(id int) error
 	CreateSession(user *entity.User) (*session.Session, error)
 	ValidateSession(token string) error
-	UpdateSession(c *http.Cookie) (int, bool)
-	DeleteSession(c *http.Cookie) *http.Cookie
+	UpdateSession(token, rToken string) (string, error)
+	DeleteSession(token string) error
 }
 
 type Basket interface {

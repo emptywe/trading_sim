@@ -21,12 +21,13 @@ func NewHandler(services *service.Service, currencyList []string) *Handler {
 
 func (h *Handler) InitRoutes() http.Handler {
 	router := mux.NewRouter()
-	router.Use(h.Middleware)
+	router.Use(h.middleware)
 	router.HandleFunc("/sim/auth/sign-up", h.signUp).Methods("POST").Name("SignUp")
 	router.HandleFunc("/sim/auth/sign-in", h.signIn).Methods("POST").Name("SignIp")
 	router.HandleFunc("/sim/auth/update-user", h.updateUser).Methods("POST").Name("Update")
-	router.HandleFunc("/sim/auth/delete-user", nil).Methods("DELETE").Name("Delete")
+	router.HandleFunc("/sim/auth/delete-user", h.deleteUser).Methods("DELETE").Name("Delete")
 	router.HandleFunc("/sim/auth/logout", h.logOut).Methods("POST").Name("Logout")
+	router.HandleFunc("/sim/auth/refresh", h.refreshSession).Methods("POST").Name("Refresh")
 	router.HandleFunc("/sim/api/basket/prices", h.prices).Methods("GET").Name("Prices")
 	router.HandleFunc("/sim/api/basket/swap", h.swap).Methods("POST").Name("Swap")
 	router.HandleFunc("/sim/api/basket/balance", h.balance).Methods("GET").Name("Balance")

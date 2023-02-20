@@ -43,7 +43,7 @@ func (c *SessionCache) Read(ctx context.Context, username, ssid, token string) e
 func (c *SessionCache) Update(ctx context.Context, username, ssid, token string) error {
 	key := fmt.Sprintf("session_cache%s_%s", username, ssid)
 
-	err := c.db.Set(ctx, key, token, 0).Err()
+	err := c.db.Set(ctx, key, token, session.ExpireSession).Err()
 	if err != nil {
 		return err
 	}
