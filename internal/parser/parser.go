@@ -23,7 +23,7 @@ func NewParser(repo *parser_repo.Repository, poolSize int, currencyList []string
 func (a *Parser) parseBinanceData(Data chan binancews.DataPrice) {
 	for i := range Data {
 		price, _ := strconv.ParseFloat(i.Price, 64)
-		if err := a.repo.UpdateCurrency(strings.ToLower(i.Symbol), price); err != nil {
+		if err := a.repo.UpdateCurrency(strings.TrimSuffix(strings.ToLower(i.Symbol), "usdt"), price); err != nil {
 			zap.S().Errorf("can't update currency: %v", err)
 		}
 	}
@@ -53,6 +53,7 @@ func (a *Parser) currencyUpdater() {
 
 func (a *Parser) createCurrencies() {
 	for _, cur := range a.currencyList {
+		cur = strings.TrimSuffix(cur, "usdt")
 		err := a.repo.CreateNewCurrency(cur)
 		if err != nil {
 			zap.S().Errorf("can't create currency storage: %v", err)

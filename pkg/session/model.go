@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	tokenEXP      = time.Minute * 15
+	tokenEXP      = time.Minute * 15000
 	ExpireSession = time.Hour * 24
 	signTKey      = "sNKL213%md#4411jHKjHuh7*@1"
 )

@@ -1,6 +1,8 @@
 package basket
 
 import (
+	"errors"
+	"fmt"
 	"github.com/emptywe/trading_sim/entity"
 	"github.com/emptywe/trading_sim/internal/storage/postgres/simulator_repo"
 )
@@ -17,38 +19,59 @@ func (s *Service) GetCurrency(name string) (entity.Currency, error) {
 	return s.repo.GetCurrency(name)
 }
 
-func (s *Service) CreateBasket(id int, c1, c2 string, v float64) (int, error) {
-	return s.repo.CreateBasket(id, c1, c2, v)
-}
-
-func (s *Service) GetBasket(id int, c string) (entity.Basket, error) {
-	return s.repo.GetBasket(id, c)
-}
-
-func (s *Service) GetAllCurrenciesUSD() ([]entity.CurrencyOutput, error) {
-	return s.repo.GetAllCurrenciesUSD()
+func (s *Service) GetBasket(cur string, uid int) (entity.Basket, error) {
+	return s.repo.GetBasket(cur, uid)
 }
 
 func (s *Service) GetAllBaskets(id int) ([]entity.BasketOutput, error) {
 	return s.repo.GetAllBaskets(id)
 }
 
-func (s *Service) GetTopUsers() ([]entity.TUser, error) {
-	return s.repo.GetTopUsers()
+func (s *Service) CreateStartingBasket(uid int) error {
+	cur, err := s.repo.GetCurrency(entity.BaseCurrency)
+	if err != nil {
+		return err
+	}
+	_, err = s.repo.CreateBasket(uid, cur, entity.StartingBalance)
+	return err
 }
 
-func (s *Service) CreateStartingBasket(id int) (int, error) {
-	return s.repo.CreateStartingBasket(id)
-}
+func (s *Service) ServeTrade(ts entity.Transaction, uid int) error {
+	var bid2 int
+	b1, err := s.repo.GetBasket(ts.BaseCurrency, uid)
+	if err != nil {
+		return fmt.Errorf("you don't have such currency yet: %v", err)
+	}
+	cur1, err := s.repo.GetCurrency(ts.BaseCurrency)
+	if err != nil {
+		return err
+	}
+	cur2, err := s.repo.GetCurrency(ts.TradeCurrency)
+	if err != nil {
+		return err
+	}
 
-func (s *Service) UpdateBalance() (string, error) {
-	return s.repo.UpdateBalance()
-}
+	if b1.ValueUSD < ts.TradeAmount*cur2.Value {
+		return errors.New("not enough base currency amount")
+	}
 
-func (s *Service) UpdateBasket(name string) error {
-	return s.repo.UpdateBasket(name)
-}
+	b2, err := s.repo.GetBasket(ts.TradeCurrency, uid)
+	if err != nil {
+		bid2, err = s.repo.CreateBasket(uid, cur2, entity.DefaultBalance)
+		if err != nil {
+			return err
+		}
+	} else {
+		bid2 = b2.Bid
+	}
+	err = s.repo.UpdateBasketAmount(-ts.TradeAmount*cur2.Value/cur1.Value, b1.Bid)
+	if err != nil {
+		return err
+	}
+	err = s.repo.UpdateBasketAmount(ts.TradeAmount, bid2)
+	if err != nil {
+		return err
+	}
 
-func (s *Service) CreateBasketSell(id int, c string, v float64) (int, error) {
-	return s.repo.CreateBasketSell(id, c, v)
+	return nil
 }

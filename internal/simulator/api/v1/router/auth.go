@@ -34,8 +34,7 @@ func (h *Handler) signUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = h.services.Basket.CreateStartingBasket(id)
-	if err != nil {
+	if err = h.services.Basket.CreateStartingBasket(id); err != nil {
 		err = fmt.Errorf("basket not created, user dropped: %v", err)
 		zap.S().Error(err)
 		errorJSON(w, err, http.StatusInternalServerError)

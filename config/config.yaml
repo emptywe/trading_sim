@@ -7,4 +7,4 @@ redis:
   password: ""
   db: "1"
 
-currencies: "btcusdt,ethusdt,bnbusdt,solusdt,adausdt,xrpusdt,dotusdt,dogeusdt,shibusdt,lunausdt,avaxusdt,ltcusdt,linkusdt,ftmusdt,uniusdt,bchusdt,hbarusdt,algousdt,maticusdt,vetusdt,xlmusdt,trxusdt,axsusdt,icpusdt,filusdt,atomusdt,etcusdt,thetausdt,nearusdt,fttusdt"
+currencies: "btcusdt,ethusdt,bnbusdt,solusdt,adausdt,xrpusdt,dotusdt,dogeusdt,shibusdt,lunausdt,avaxusdt,ltcusdt,linkusdt,ftmusdt,uniusdt,bchusdt,hbarusdt,algousdt,maticusdt,vetusdt,xlmusdt,trxusdt,axsusdt,icpusdt,filusdt,atomusdt,etcusdt,thetausdt,nearusdt"

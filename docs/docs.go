@@ -54,7 +54,6 @@ package docs
 
 import (
 	"github.com/emptywe/trading_sim/entity"
-	"github.com/emptywe/trading_sim/internal/simulator/api/v1/router"
 )
 
 // swagger:route POST /auth/sign-up foobar-tag idOfsignUpEndpoint
@@ -229,7 +228,7 @@ type topUsersParamsWrapper struct {
 // swagger:response swapResponse
 type swapResponseWrapper struct {
 	// in:body
-	Body router.Transaction
+	Body entity.Transaction
 }
 
 // If user doesn't sign in return status 403
