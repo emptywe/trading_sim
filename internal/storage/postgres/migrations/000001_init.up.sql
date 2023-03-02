@@ -28,5 +28,5 @@ CREATE TABLE IF NOT EXISTS basket
     amount float4
 );
 
-INSERT INTO currencies (name, value)  values ('usdt', 1);
+INSERT INTO currencies (name, value)  values ('usd', 1);
 

@@ -1,17 +1,17 @@
-REPONAME := trading_sim
+PROJECTNAME=$(shell basename "$(PWD)")
 
-GOCMD=go
-GORUN=$(GOCMD) run
-GOTEST=$(GOCMD) test
-GOBUILD=$(GOCMD) build
-GOINSTALL=$(GOCMD) install
+.PHONY:
+.SILENT:
 
-run:
-	 $(GORUN) cmd/simulator/*.go
-run-parser:
-	 $(GORUN) cmd/parser/*.go
+CFLAGS = -local
 
 build:
-	@cd ./cmd/parser && $(GOBUILD)
-	@cd ./cmd/simulator && $(GOBUILD)
-.PHONY:
+	go build -o ./.bin/sim cmd/*.go
+compose:
+	docker-compose up --build
+run: build
+	./.bin/sim ${CFLAGS}
+
+run-docker: compose
+
+

@@ -1,6 +1,7 @@
 package router
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"go.uber.org/zap"
@@ -23,11 +24,14 @@ func (h *Handler) middleware(handler http.Handler) http.Handler {
 				return
 			}
 			token := authSlice[1]
-			if err := h.services.ValidateSession(token); err != nil {
+			uid, err := h.services.ValidateSession(token)
+			if err != nil {
 				zap.S().Errorf("invalid authorisation token: %v", err)
 				errorJSON(w, errors.New("invalid authorisation token"), http.StatusBadRequest)
 				return
 			}
+			ctx := context.WithValue(r.Context(), "uid", uid)
+			r = r.WithContext(ctx)
 		} else {
 			if len(authSlice) > 1 || authSlice[0] != "" {
 				zap.S().Error("user already logged in")

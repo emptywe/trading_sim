@@ -9,7 +9,7 @@ import (
 )
 
 func init() {
-	config.InitConfig("config", "config")
+	config.Init("config", "config")
 }
 
 func main() {

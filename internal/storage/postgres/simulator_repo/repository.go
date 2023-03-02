@@ -16,25 +16,27 @@ type Authorization interface {
 
 type Basket interface {
 	GetCurrency(name string) (entity.Currency, error)
-	CreateBasket(id int, c1, c2 string, v float64) (int, error)
-	GetBasket(id int, c string) (entity.Basket, error)
-	GetAllCurrenciesUSD() ([]entity.CurrencyOutput, error)
+	GetBasket(cur string, uid int) (entity.Basket, error)
 	GetAllBaskets(id int) ([]entity.BasketOutput, error)
+	CreateBasket(uid int, cur entity.Currency, amount float64) (int, error)
+	UpdateBasketAmount(delta float64, bid int) error
+}
+
+type Info interface {
+	GetAllCurrenciesUSD() ([]entity.CurrencyOutput, error)
 	GetTopUsers() ([]entity.TUser, error)
-	CreateStartingBasket(id int) (int, error)
-	UpdateBalance() (string, error)
-	UpdateBasket(name string) error
-	CreateBasketSell(id int, c string, v float64) (int, error)
 }
 
 type Repository struct {
 	Authorization
 	Basket
+	Info
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuthPostgres(db),
 		Basket:        NewBasketPostgres(db),
+		Info:          NewInfoPostgres(db),
 	}
 }

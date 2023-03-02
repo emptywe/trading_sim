@@ -17,18 +17,18 @@ func (s *Service) CreateSession(user *entity.User) (*session.Session, error) {
 	return ses, err
 }
 
-func (s *Service) ValidateSession(token string) error {
+func (s *Service) ValidateSession(token string) (int, error) {
 	if err := session.ValidateToken(token); err != nil {
-		return err
+		return 0, err
 	}
 	claims, err := session.ParseToken(&session.TokenClaims{}, token)
 	if err != nil {
-		return err
+		return 0, err
 	}
 	if err = s.cache.Read(context.Background(), claims.(*session.TokenClaims).UserName, claims.(*session.TokenClaims).Sid, token); err != nil {
-		return err
+		return 0, err
 	}
-	return nil
+	return claims.(*session.TokenClaims).UserId, nil
 }
 
 func (s *Service) UpdateSession(token, rToken string) (string, error) {

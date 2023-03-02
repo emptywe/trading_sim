@@ -23,7 +23,7 @@ func NewParser(repo *parser_repo.Repository, poolSize int, currencyList []string
 func (a *Parser) parseBinanceData(Data chan binancews.DataPrice) {
 	for i := range Data {
 		price, _ := strconv.ParseFloat(i.Price, 64)
-		if err := a.repo.UpdateCurrency(strings.ToLower(i.Symbol), price); err != nil {
+		if err := a.repo.UpdateCurrency(strings.TrimSuffix(strings.ToLower(i.Symbol), "usdt"), price); err != nil {
 			zap.S().Errorf("can't update currency: %v", err)
 		}
 	}
@@ -37,9 +37,9 @@ func (a *Parser) createWorker(list []string) {
 
 func (a *Parser) currencyUpdater() {
 	var list []string
-	for _, v := range a.currencyList {
+	for i, v := range a.currencyList {
 		list = append(list, v+binancews.Trade)
-		if len(list)%a.poolSize == 0 {
+		if len(list)%a.poolSize == 0 && i > 0 {
 			zap.S().Infof("Creating worker on %v", list)
 			go a.createWorker(list)
 			list = []string{}
@@ -47,12 +47,14 @@ func (a *Parser) currencyUpdater() {
 		}
 	}
 	if len(list) > 0 {
+		zap.S().Infof("Creating worker on %v", list)
 		go a.createWorker(list)
 	}
 }
 
 func (a *Parser) createCurrencies() {
 	for _, cur := range a.currencyList {
+		cur = strings.TrimSuffix(cur, "usdt")
 		err := a.repo.CreateNewCurrency(cur)
 		if err != nil {
 			zap.S().Errorf("can't create currency storage: %v", err)
