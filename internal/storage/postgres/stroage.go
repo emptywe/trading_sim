@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"database/sql"
-
+	"fmt"
 	"github.com/golang-migrate/migrate/v4"
 	migratepgx "github.com/golang-migrate/migrate/v4/database/pgx"
 	_ "github.com/jackc/pgx/v4/stdlib"
@@ -12,11 +12,16 @@ import (
 )
 
 type Config struct {
-	Url string
+	Username string
+	Password string
+	Host     string
+	Port     string
+	DbName   string
 }
 
 func NewDB(cfg Config) (*sqlx.DB, error) {
-	db, err := sqlx.Connect("pgx", cfg.Url)
+	url := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", cfg.Username, cfg.Password, cfg.Host, cfg.Port, cfg.DbName)
+	db, err := sqlx.Connect("pgx", url)
 	if err != nil {
 		return nil, err
 	}

@@ -84,6 +84,7 @@ func (h *Handler) signIn(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
 }
 
 func (h *Handler) logOut(w http.ResponseWriter, r *http.Request) {
@@ -111,5 +112,11 @@ func (h *Handler) updateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) deleteUser(w http.ResponseWriter, r *http.Request) {
-
+	uid := r.Context().Value("uid").(int)
+	if err := h.services.DeleteUser(uid); err != nil {
+		zap.S().Errorf("can't delete user: %v", err)
+		errorJSON(w, err, http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }

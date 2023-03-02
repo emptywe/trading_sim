@@ -37,9 +37,9 @@ func (a *Parser) createWorker(list []string) {
 
 func (a *Parser) currencyUpdater() {
 	var list []string
-	for _, v := range a.currencyList {
+	for i, v := range a.currencyList {
 		list = append(list, v+binancews.Trade)
-		if len(list)%a.poolSize == 0 {
+		if len(list)%a.poolSize == 0 && i > 0 {
 			zap.S().Infof("Creating worker on %v", list)
 			go a.createWorker(list)
 			list = []string{}
@@ -47,6 +47,7 @@ func (a *Parser) currencyUpdater() {
 		}
 	}
 	if len(list) > 0 {
+		zap.S().Infof("Creating worker on %v", list)
 		go a.createWorker(list)
 	}
 }

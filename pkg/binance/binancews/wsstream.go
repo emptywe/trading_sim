@@ -46,7 +46,6 @@ func (ws *WSClient) Subscribe(params []string) (err error) {
 
 func (ws *WSClient) Unsubscribe(params []string) (err error) {
 	reqd := connRequest{Method: unsubscribe, Params: params, Id: 312}
-	zap.S().Info("unsubscribed:", params)
 	stop, err := json.Marshal(reqd)
 	if err != nil {
 		zap.S().Errorf("can't encode interrupt request, error: %v", err)
@@ -66,7 +65,6 @@ func (ws *WSClient) disconnect() error {
 	select {
 	case <-time.After(time.Second):
 	}
-	zap.S().Info("WSDone")
 	return nil
 }
 

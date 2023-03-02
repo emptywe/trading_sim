@@ -1,6 +1,8 @@
 package authentication
 
 import (
+	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"strings"
 
 	"github.com/emptywe/trading_sim/entity"
@@ -18,12 +20,12 @@ func NewAuthService(repo simulator_repo.Authorization, cache *session_cache.Cach
 }
 
 func (s *Service) CreateUser(request entity.SignUpRequest) (int, error) {
-	var err error
 	request.UserName = strings.ToLower(request.UserName)
-	request.Password, err = generatePasswordHash(request.Password)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return 0, err
 	}
+	request.Password = fmt.Sprintf("%s", hashedPassword)
 	return s.repo.CreateUser(request)
 }
 
@@ -36,11 +38,7 @@ func (s *Service) ReadUser(request entity.SignInRequest) (entity.User, error) {
 }
 
 func (s *Service) UpdateUser(email, userName, password string) (int, error) {
-	var err error
-	password, err = generatePasswordHash(password)
-	if err != nil {
-		return 0, err
-	}
+
 	// TODO: add logic
 	return s.repo.CreateUser(entity.SignUpRequest{})
 }

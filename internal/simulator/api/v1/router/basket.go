@@ -16,7 +16,7 @@ func (h *Handler) swap(w http.ResponseWriter, r *http.Request) {
 		errorJSON(w, err, http.StatusBadRequest)
 		return
 	}
-	// TODO: move to another function
+
 	uid := r.Context().Value("uid").(int)
 	err := h.services.ServeTrade(input, uid)
 	if err != nil {
@@ -29,22 +29,22 @@ func (h *Handler) swap(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) balance(w http.ResponseWriter, r *http.Request) {
 
-	// TODO: create new user balance logic
-	bb, err := h.services.Basket.GetAllBaskets(1)
+	uid := r.Context().Value("uid").(int)
+	baskets, err := h.services.Basket.GetAllBaskets(uid)
 	if err != nil {
 		zap.S().Errorf("can't' get all baskets: %v", err)
 		errorJSON(w, err, http.StatusInternalServerError)
 		return
 	}
 
-	var b float64
-	for i, _ := range bb {
-		b += bb[i].USDAmount
+	var balance float64
+	for i, _ := range baskets {
+		balance += baskets[i].USDAmount
 	}
 
 	if err = json.NewEncoder(w).Encode(map[string]interface{}{
-		"balance": b,
-		"baskets": bb,
+		"balance": balance,
+		"baskets": baskets,
 	}); err != nil {
 		zap.S().Error("can't send balance success response ")
 		w.WriteHeader(http.StatusInternalServerError)
