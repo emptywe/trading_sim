@@ -2,8 +2,9 @@ package router
 
 import (
 	"encoding/json"
-	"go.uber.org/zap"
 	"net/http"
+
+	"go.uber.org/zap"
 )
 
 func (h *Handler) prices(w http.ResponseWriter, r *http.Request) {

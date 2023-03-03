@@ -2,10 +2,11 @@ package router
 
 import (
 	"encoding/json"
-	"github.com/emptywe/trading_sim/entity"
 	"net/http"
 
 	"go.uber.org/zap"
+
+	"github.com/emptywe/trading_sim/entity"
 )
 
 func (h *Handler) swap(w http.ResponseWriter, r *http.Request) {

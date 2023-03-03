@@ -3,6 +3,7 @@ package basket
 import (
 	"errors"
 	"fmt"
+
 	"github.com/emptywe/trading_sim/entity"
 	"github.com/emptywe/trading_sim/internal/storage/postgres/simulator_repo"
 )

@@ -2,6 +2,7 @@ package authentication
 
 import (
 	"context"
+
 	"github.com/emptywe/trading_sim/entity"
 	"github.com/emptywe/trading_sim/pkg/session"
 )

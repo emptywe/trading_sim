@@ -2,8 +2,10 @@ package simulator_repo
 
 import (
 	"errors"
-	"github.com/emptywe/trading_sim/entity"
+
 	"github.com/jmoiron/sqlx"
+
+	"github.com/emptywe/trading_sim/entity"
 )
 
 type InfoPostgres struct {

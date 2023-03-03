@@ -2,19 +2,20 @@ package main
 
 import (
 	"flag"
-	"github.com/emptywe/trading_sim/internal/parser"
-	"github.com/emptywe/trading_sim/internal/storage/postgres/parser_repo"
+	"os"
+	"strings"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
-	"os"
-	"strings"
 
+	"github.com/emptywe/trading_sim/internal/parser"
 	"github.com/emptywe/trading_sim/internal/simulator/api/v1/router"
 	"github.com/emptywe/trading_sim/internal/simulator/api/v1/server"
 	"github.com/emptywe/trading_sim/internal/simulator/service"
 	"github.com/emptywe/trading_sim/internal/storage/postgres"
+	"github.com/emptywe/trading_sim/internal/storage/postgres/parser_repo"
 	"github.com/emptywe/trading_sim/internal/storage/postgres/simulator_repo"
 	myredis "github.com/emptywe/trading_sim/internal/storage/redis"
 	"github.com/emptywe/trading_sim/internal/storage/redis/simulator_cache/session_cache"
@@ -63,7 +64,7 @@ func setupConfigs(local bool) (pgConf postgres.Config, redisConf myredis.Config)
 }
 
 func execute() {
-	local := flag.Bool("local", false, "set local db and cache seetings")
+	local := flag.Bool("local", false, "set local db and cache settings")
 	flag.Parse()
 	pgConf, redisConf := setupConfigs(*local)
 	srv := new(server.Server)
