@@ -8,7 +8,7 @@ CFLAGS = -local
 build:
 	go build -o ./.bin/sim cmd/*.go
 compose:
-	docker-compose up --build --remove-orphans
+	docker-compose up -d --build --remove-orphans
 run: build
 	./.bin/sim ${CFLAGS}
 down:
