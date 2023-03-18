@@ -42,17 +42,8 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    environment:
-      - APP_HOST=${APP_HOST}
-      - APP_PORT=${APP_PORT}
-      - CACHE_HOST=${CACHE_HOST}
-      - CACHE_PORT=${CACHE_PORT}
-      - CACHE_PASSWORD=${CACHE_PASSWORD}
-      - CACHE_DB=${CACHE_DB}
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-      - DATABASE_HOST=${DB_HOST}
+    env_file:
+      - .env
     depends_on:
       database:
         condition: service_healthy
