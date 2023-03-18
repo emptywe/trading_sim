@@ -91,6 +91,7 @@ func (ws *WSClient) reconnect(params []string) error {
 	return nil
 }
 
+// WSHandlerBinance Main logic
 func (ws *WSClient) WSHandlerBinance(params []string) {
 	start := time.Now()
 	res := new(DataPrice)
