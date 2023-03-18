@@ -31,6 +31,7 @@ func (ws *WSClient) connectToWS() (err error) {
 	return nil
 }
 
+// Subscribe Subscribing to price stream
 func (ws *WSClient) Subscribe(params []string) (err error) {
 	reqc := connRequest{Method: subscribe, Params: params, Id: 1}
 
