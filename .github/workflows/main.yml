@@ -22,6 +22,8 @@ jobs:
           port: ${{ secrets.VPS_SSH_PORT }}
           # passphrase
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          #password
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
           script: |
             cd ${{ secrets.PROJECT_PATH }}
             git pull origin main
