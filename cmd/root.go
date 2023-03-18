@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/go-redis/redis/v8"
@@ -32,6 +33,8 @@ func initHandlers(pdb *sqlx.DB, rdb *redis.Client) *router.Handler {
 
 func setupConfigs(local bool) (pgConf postgres.Config, redisConf myredis.Config) {
 	if local {
+		server.Host = viper.GetString("host")
+		server.Port = viper.GetInt("port")
 		pgConf = postgres.Config{
 			Username: viper.GetString("postgres.username"),
 			Password: viper.GetString("postgres.password"),
@@ -46,6 +49,12 @@ func setupConfigs(local bool) (pgConf postgres.Config, redisConf myredis.Config)
 			Db:       viper.GetString("redis.db"),
 		}
 	} else {
+		server.Host = os.Getenv("APP_HOST")
+		port, err := strconv.ParseInt(os.Getenv("APP_PORT"), 10, 16)
+		if err != nil {
+			panic(err)
+		}
+		server.Port = int(port)
 		pgConf = postgres.Config{
 			Username: os.Getenv("DB_USER"),
 			Password: os.Getenv("DB_PASSWORD"),
@@ -79,7 +88,7 @@ func execute() {
 	}
 	defer rdb.Close()
 
-	go srv.StartNewServer(initHandlers(pdb, rdb).InitRoutes(), viper.GetInt("port"))
+	go srv.StartNewServer(initHandlers(pdb, rdb).InitRoutes())
 	srv.WaitServer()
 	zap.S().Infof("Parser start")
 	go parser.NewParser(parser_repo.NewRepository(pdb), 5, strings.Split(viper.GetString("currencies"), ",")).InitParser()

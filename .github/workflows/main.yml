@@ -1,0 +1,32 @@
+name: trading_sim
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          # VPS IP
+          host: ${{ secrets.VPS_SSH_HOST }}
+          # VPS username
+          username: ${{ secrets.VPS_SSH_USERNAME }}
+          # SSH key (copy it from your local machine)
+          key: ${{ secrets.VPS_SSH_SECRET }}
+          # SSH port
+          port: ${{ secrets.VPS_SSH_PORT }}
+          # passphrase
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            cd ${{ secrets.PROJECT_PATH }}
+            git pull origin main
+            make down
+            echo "Deleting old image(s)..."
+            docker image prune -a -f
+            make compose
+           

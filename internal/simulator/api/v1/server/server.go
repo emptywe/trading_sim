@@ -13,34 +13,35 @@ import (
 
 const maxPorts = 65535
 
+var Host string
+var Port int
+
 type Server struct {
 	HttpServer *http.Server
 }
 
-func (s *Server) run(port int, handler http.Handler) error {
+func (s *Server) run(handler http.Handler) error {
 
 	s.HttpServer = &http.Server{
-		Addr:           ":" + fmt.Sprintf("%d", port),
+		Addr:           Host + ":" + fmt.Sprintf("%d", Port),
 		Handler:        handler,
 		MaxHeaderBytes: 1 << 20,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
 	}
-
 	return s.HttpServer.ListenAndServe()
-
 }
 
 func (s *Server) shutdown(ctx context.Context) error {
 	return s.HttpServer.Shutdown(ctx)
 }
 
-func (s *Server) StartNewServer(handler http.Handler, port int) {
-	if err := s.run(port, handler); err != nil {
+func (s *Server) StartNewServer(handler http.Handler) {
+	if err := s.run(handler); err != nil {
 		if !errors.Is(err, http.ErrServerClosed) {
-			if strings.Contains(err.Error(), "address already in use") && port < maxPorts {
-				port++
-				go s.StartNewServer(handler, port)
+			if strings.Contains(err.Error(), "address already in use") && Port < maxPorts {
+				Port++
+				go s.StartNewServer(handler)
 				zap.S().Errorf("Can't run http simulator: %s", err)
 				return
 			}

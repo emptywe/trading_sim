@@ -2,3 +2,4 @@
 hints.txt
 .DS_Store
 .bin
+.env
