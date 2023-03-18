@@ -73,6 +73,7 @@ func (ws *WSClient) reconnect(params []string) error {
 		zap.S().Error(err)
 	}
 	if err := ws.disconnect(); err != nil {
+		// Connection might be already closed
 		zap.S().Error(err)
 	}
 	zap.S().Infof("reconnect %v", params)
