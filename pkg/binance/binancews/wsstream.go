@@ -19,6 +19,7 @@ type Income struct {
 	Value float64
 }
 
+// Connecting to binance stream
 func (ws *WSClient) connectToWS() (err error) {
 	var resp *http.Response
 	ws.wsConn, resp, err = websocket.DefaultDialer.Dial(wsUrl, nil)
