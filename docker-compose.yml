@@ -1,7 +1,7 @@
 version: "3.9"
 networks:
   local:
-  trading_sim:
+  096b65650959:
     external: true
 services:
   database:
