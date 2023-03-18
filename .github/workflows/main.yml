@@ -28,5 +28,5 @@ jobs:
             make down
             echo "Deleting old image(s)..."
             docker image prune -a -f
-            make compose
+            make run-docker
            
