@@ -60,6 +60,7 @@ func (ws *WSClient) Unsubscribe(params []string) (err error) {
 	return nil
 }
 
+// Disconnecting
 func (ws *WSClient) disconnect() error {
 	if err := ws.wsConn.Close(); err != nil {
 		return err
