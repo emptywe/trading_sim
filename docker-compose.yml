@@ -1,6 +1,8 @@
 version: "3.9"
 networks:
+  local:
   trading_sim:
+    external: true
 services:
   database:
     image: postgres:alpine
@@ -20,7 +22,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - trading_sim
+      - local
 
   cache:
     image: redis:alpine
@@ -35,7 +37,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - trading_sim
+      - local
 
   server:
     build:
@@ -53,6 +55,7 @@ services:
       - "8080:8080"
     networks:
       - trading_sim
+      - local
 
 volumes:
   data:
